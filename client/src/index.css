@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 220 10% 15%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 10% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 10% 15%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --primary: 142 76% 36%;  /* Green primary color */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 100% 50%; /* Blue secondary color */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 210 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --ring: 142 76% 36%;
+  --radius: 0.5rem;
+  
+  /* Chart colors */
+  --chart-1: 142 76% 36%;
+  --chart-2: 210 100% 50%;
+  --chart-3: 25 95% 53%;
+  --chart-4: 262 83% 58%;
+  --chart-5: 316 70% 50%;
+  
+  /* Sidebar specific colors */
+  --sidebar-background: 220 20% 10%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 142 76% 36%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 100% 50%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 215 27.9% 16.9%;
+  --sidebar-ring: 215 27.9% 16.9%;
+}
+
+.dark {
+  --background: 220 20% 10%;
+  --foreground: 0 0% 98%;
+  --muted: 220 15% 20%;
+  --muted-foreground: 220 10% 70%;
+  --popover: 220 20% 10%;
+  --popover-foreground: 0 0% 98%;
+  --card: 220 20% 12%;
+  --card-foreground: 0 0% 98%;
+  --border: 220 15% 20%;
+  --input: 220 15% 20%;
+  --primary: 142 70% 40%; /* Green in dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 100% 50%; /* Blue in dark mode */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 210 100% 50%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --ring: 142 70% 40%;
+  --radius: 0.5rem;
+  
+  /* Chart colors (dark mode) */
+  --chart-1: 142 70% 50%;
+  --chart-2: 210 100% 60%;
+  --chart-3: 25 95% 53%;
+  --chart-4: 262 83% 68%;
+  --chart-5: 316 70% 60%;
+  
+  /* Sidebar specific colors (dark mode) */
+  --sidebar-background: 220 25% 8%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 142 70% 40%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 100% 50%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 220 20% 15%;
+  --sidebar-ring: 220 20% 15%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Additional utility classes */
+.hero-pattern {
+  background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Hero section with image overlay */
+.hero-overlay {
+  position: relative;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url('your-image-url.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Transparent background classes */
+.bg-transparent-white {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.bg-transparent-dark {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Focus styles for better accessibility */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
