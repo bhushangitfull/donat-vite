@@ -12,7 +12,7 @@ import DonationForm from '@/components/donation/DonationForm';
 import { Heart, DollarSign } from 'lucide-react';
 
 // Load Stripe outside of component to avoid recreating it on each render
-if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
+if (import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
   throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
 }
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);

@@ -104,8 +104,7 @@ const Navbar = () => {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="flex items-center">
-                <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">HOPE</span>
-                <span className="ml-1 text-lg font-medium text-gray-800">Foundation</span>
+                <span className="text-2xl font-bold bg-gradient-to-tr from-black to-blue-900 bg-clip-text text-transparent bg-clip-text text-transparent">BBS</span>
               </Link>
             </div>
             <div className="hidden sm:ml-10 sm:flex sm:space-x-10">
@@ -115,8 +114,6 @@ const Navbar = () => {
                   href={item.path}
                   className={`${
                     location === item.path
-                      ? 'text-green-600 font-semibold'
-                      : 'text-gray-800 hover:text-green-600'
                   } inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors duration-200`}
                 >
                   {item.title}
@@ -126,19 +123,19 @@ const Navbar = () => {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center gap-3">
             <Link href="/donate">
-              <Button className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white border-none">
+              <Button className="bg-gradient-to-r from-black-600 to-blue-600 hover:from-grey-700 hover:to-blue-700 text-white border-none">
                 Donate Now
               </Button>
             </Link>
             {isAdmin ? (
               <Link href="/admin">
-                <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                <Button variant="outline" className="border-black-600 text-grey-600">
                   Admin Dashboard
                 </Button>
               </Link>
             ) : (
               <Link href="/admin">
-                <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                <Button variant="outline" className="h-8 px-4 bg-black text-white hover:bg-gray-800">
                   Admin Login
                 </Button>
               </Link>
@@ -186,7 +183,7 @@ const Navbar = () => {
                         </Link>
                       ) : (
                         <Link href="/admin">
-                          <Button variant="outline" className="w-full border-green-600 text-green-600 hover:bg-green-50">
+                          <Button variant={"outline"} className="w-full border-black text-black  hover:bg-gray-800">
                             Admin Login
                           </Button>
                         </Link>

@@ -17,11 +17,13 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Firebase configuration - using environment variables
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID}.appspot.com`,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyA9hpzrKQ93TeOCy95-r_tr5Do-ejWKJkk",
+  authDomain: "dona-4a86e.firebaseapp.com",
+  projectId: "dona-4a86e",
+  storageBucket: "dona-4a86e.firebasestorage.app",
+  messagingSenderId: "121254084642",
+  appId: "1:121254084642:web:a607076fba04963fb90a7b",
+  measurementId: "G-1QNKJE6HFM"
 };
 
 // Initialize Firebase

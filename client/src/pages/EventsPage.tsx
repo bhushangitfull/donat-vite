@@ -361,7 +361,7 @@ const EventsPage = ({ id }: EventsPageProps) => {
             <Button className="bg-primary hover:bg-blue-700">
               Become a Volunteer
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" className='hover: text-black'>
               Contact Us
             </Button>
           </div>

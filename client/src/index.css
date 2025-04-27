@@ -4,34 +4,34 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 220 10% 15%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+  --foreground: 220 10% 10%;
+  --muted: 220 20% 97%;
+  --muted-foreground: 220 10% 40%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 10% 15%;
+  --popover-foreground: 220 10% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 220 10% 15%;
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --primary: 142 76% 36%;  /* Green primary color */
+  --card-foreground: 220 10% 10%;
+  --border: 220 15% 90%;
+  --input: 220 20% 97%;
+  --primary: 24 9.8% 10%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 210 100% 50%; /* Blue secondary color */
-  --secondary-foreground: 0 0% 100%;
-  --accent: 210 100% 50%;
+  --secondary: 210 20% 95%;
+  --secondary-foreground: 210 10% 15%;
+  --accent: 24 5.4% 63.9%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 142 76% 36%;
+  --destructive: 0 80% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 250 70% 50%;
   --radius: 0.5rem;
   
   /* Chart colors */
   --chart-1: 142 76% 36%;
   --chart-2: 210 100% 50%;
   --chart-3: 25 95% 53%;
-  --chart-4: 262 83% 58%;
-  --chart-5: 316 70% 50%;
+  --chart-4: 262 83% 58%; 
+  --chart-5: 316 70% 50%; 
   
-  /* Sidebar specific colors */
+  /* Sidebar specific colors */ 
   --sidebar-background: 220 20% 10%;
   --sidebar-foreground: 210 40% 98%;
   --sidebar-primary: 142 76% 36%;
@@ -43,26 +43,27 @@
 }
 
 .dark {
-  --background: 220 20% 10%;
+  --background: 220 10% 10%;
   --foreground: 0 0% 98%;
-  --muted: 220 15% 20%;
+  --muted: 220 10% 30%;
   --muted-foreground: 220 10% 70%;
-  --popover: 220 20% 10%;
+  --popover: 220 20% 12%;
   --popover-foreground: 0 0% 98%;
   --card: 220 20% 12%;
   --card-foreground: 0 0% 98%;
   --border: 220 15% 20%;
   --input: 220 15% 20%;
-  --primary: 142 70% 40%; /* Green in dark mode */
+  --primary: 210 40% 60%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 210 100% 50%; /* Blue in dark mode */
+  --secondary: 220 15% 20%;
   --secondary-foreground: 0 0% 100%;
-  --accent: 210 100% 50%;
+  --accent: 220 10% 50%;
+
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 62.8% 30.6%;
+  --destructive: 0 62.8% 50%;
   --destructive-foreground: 0 0% 98%;
-  --ring: 142 70% 40%;
   --radius: 0.5rem;
+  
   
   /* Chart colors (dark mode) */
   --chart-1: 142 70% 50%;
@@ -77,7 +78,6 @@
   --sidebar-primary: 142 70% 40%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 210 100% 50%;
-  --sidebar-accent-foreground: 0 0% 100%;
   --sidebar-border: 220 20% 15%;
   --sidebar-ring: 220 20% 15%;
 }
@@ -94,7 +94,7 @@
 
 /* Additional utility classes */
 .hero-pattern {
-  background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #232423 0%, #848485 100%);
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
@@ -104,7 +104,7 @@
   background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url('your-image-url.jpg');
   background-size: cover;
   background-position: center;
-  color: white;
+  color: rgb(87 83 78); 
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
