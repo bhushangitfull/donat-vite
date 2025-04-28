@@ -226,29 +226,6 @@ const ContactPage = () => {
         </div>
       </div>
 
-      {/* Map Section */}
-      <div className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Location</h2>
-            <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-              Find us at our main office or community center.
-            </p>
-          </div>
-          
-          <div className="h-96 bg-gray-200 rounded-lg overflow-hidden">
-            {/* In a real application, you would embed a Google Map or similar here */}
-            <div className="w-full h-full flex items-center justify-center text-gray-500">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 mx-auto mb-4" />
-                <p className="text-lg font-medium">Map Placeholder</p>
-                <p>In a real application, an interactive map would be displayed here.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* FAQ Section */}
       <div className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

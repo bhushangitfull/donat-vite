@@ -94,11 +94,11 @@ const Navbar = () => {
   }, [scrolled]);
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+    <nav className={`sticky top-0 z-50 transition-all duration-300 border-b bg-background ${
       scrolled 
-        ? 'bg-white/90 backdrop-blur-sm shadow-md' 
-        : 'bg-transparent'
-    }`}>
+        ? 'bg-white/90 backdrop-blur-sm shadow-md ' 
+        : 'bg-background'
+    } `}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex">
@@ -183,7 +183,7 @@ const Navbar = () => {
                         </Link>
                       ) : (
                         <Link href="/admin">
-                          <Button variant={"outline"} className="w-full border-black text-black  hover:bg-gray-800">
+                          <Button variant={"outline"} className="w-full border-black text-black">
                             Admin Login
                           </Button>
                         </Link>

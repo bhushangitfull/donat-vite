@@ -17,7 +17,7 @@
   --primary-foreground: 0 0% 100%;
   --secondary: 210 20% 95%;
   --secondary-foreground: 210 10% 15%;
-  --accent: 24 5.4% 63.9%;
+  --accent: 240 5.9% 90%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 80% 60%;
   --destructive-foreground: 0 0% 100%;
@@ -57,7 +57,7 @@
   --primary-foreground: 0 0% 100%;
   --secondary: 220 15% 20%;
   --secondary-foreground: 0 0% 100%;
-  --accent: 220 10% 50%;
+  --accent: 210 40% 96.1%;
 
   --accent-foreground: 0 0% 100%;
   --destructive: 0 62.8% 50%;
@@ -116,7 +116,7 @@
 
 .bg-transparent-dark {
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
 .gradient-text {
@@ -145,7 +145,7 @@
 /* Focus styles for better accessibility */
 :focus-visible {
   outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
+  outline-offset: 5px;
 }
 
 /* Scrollbar customization */

@@ -100,7 +100,7 @@ const Donate = () => {
                               variant={selectedAmount === amount ? "default" : "outline"}
                               className={`w-full ${
                                 selectedAmount === amount
-                                  ? 'bg-primary text-white hover:bg-blue-700'
+                                  ? 'bg-primary text-white'
                                   : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                               }`}
                               onClick={() => handleAmountClick(amount)}

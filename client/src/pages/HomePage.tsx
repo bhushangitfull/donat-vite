@@ -30,9 +30,7 @@ const HomePage = () => {
   return (
     <div>
       <Hero />
-      <Mission />
       <Events />
-      <Impact />
       <News />
       <Donate />
       <Newsletter />

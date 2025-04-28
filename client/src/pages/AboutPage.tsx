@@ -27,32 +27,32 @@ const AboutPage = () => {
   }, []);
 
   // Team members data
-  const teamMembers = [
-    {
-      name: 'Emma Rodriguez',
-      role: 'Executive Director',
-      bio: 'Emma has over 15 years of experience in nonprofit leadership and community development.',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Programs Director',
-      bio: 'Michael oversees our educational programs and community initiatives with passion and dedication.',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    },
-    {
-      name: 'Sarah Johnson',
-      role: 'Development Director',
-      bio: 'Sarah leads our fundraising efforts and donor relations to ensure sustainable growth.',
-      image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    },
-    {
-      name: 'David Williams',
-      role: 'Community Outreach Coordinator',
-      bio: 'David connects with local organizations and volunteers to maximize our impact.',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    }
-  ];
+  // const teamMembers = [
+  //   {
+  //     name: 'Emma Rodriguez',
+  //     role: 'Executive Director',
+  //     bio: 'Emma has over 15 years of experience in nonprofit leadership and community development.',
+  //     image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  //   },
+  //   {
+  //     name: 'Michael Chen',
+  //     role: 'Programs Director',
+  //     bio: 'Michael oversees our educational programs and community initiatives with passion and dedication.',
+  //     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  //   },
+  //   {
+  //     name: 'Sarah Johnson',
+  //     role: 'Development Director',
+  //     bio: 'Sarah leads our fundraising efforts and donor relations to ensure sustainable growth.',
+  //     image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  //   },
+  //   {
+  //     name: 'David Williams',
+  //     role: 'Community Outreach Coordinator',
+  //     bio: 'David connects with local organizations and volunteers to maximize our impact.',
+  //     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  //   }
+  // ];
 
   // Values data
   const values = [
@@ -187,14 +187,14 @@ const AboutPage = () => {
       {/* Team Section */}
       <div className="py-16 bg-gray-50" id="team">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900">Our Team</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               Meet the dedicated people who make our mission possible.
             </p>
-          </div>
+          </div> */}
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <Card key={index} className="text-center">
                 <CardContent className="p-6">
@@ -208,12 +208,12 @@ const AboutPage = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div> */}
           
           <div className="mt-12 text-center">
-            <p className="text-lg text-gray-600 mb-6">
+            {/* <p className="text-lg text-gray-600 mb-6">
               Our team is supported by an amazing group of volunteers and community partners.
-            </p>
+            </p> */}
             <Button className="bg-primary hover:bg-blue-700">
               Join Our Team
             </Button>
@@ -293,14 +293,14 @@ const AboutPage = () => {
       {/* Partners Section */}
       <div className="py-16 bg-gray-50" id="partners">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900">Our Partners</h2>
             <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
               We collaborate with these organizations to maximize our impact.
             </p>
-          </div>
+          </div> */}
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
               <div key={item} className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm">
                 <div className="h-16 w-32 bg-gray-200 rounded flex items-center justify-center text-gray-500 font-medium">
@@ -308,7 +308,7 @@ const AboutPage = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
           
           <div className="mt-12 text-center">
             <p className="text-lg text-gray-600 mb-6">
@@ -394,7 +394,7 @@ const AboutPage = () => {
             <Button className="bg-white text-primary hover:bg-gray-100">
               Volunteer With Us
             </Button>
-            <Button variant="outline" className="text-white border-white hover:bg-white/10">
+            <Button variant="outline">
               Donate Now
             </Button>
           </div>
