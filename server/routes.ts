@@ -1,91 +1,51 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import Stripe from "stripe";
 import { storage } from "./storage";
+import Razorpay from 'razorpay';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  console.warn('Missing STRIPE_SECRET_KEY environment variable. Stripe payment features will not work.');
-}
 
-const stripe = process.env.STRIPE_SECRET_KEY 
-  ? new Stripe(process.env.STRIPE_SECRET_KEY) 
-  : null;
+
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for the nonprofit app
 
-  // Create a payment intent for donations
-  app.post("/api/create-payment-intent", async (req, res) => {
+  const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID, // Corrected variable name
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+
+
+  //Create Razorpay order
+  app.post("/api/create-order", async (req, res) => {
     try {
       const { amount } = req.body;
-      
-      if (!stripe) {
-        return res.status(500).json({ 
-          message: "Stripe is not configured. Please set the STRIPE_SECRET_KEY environment variable." 
+
+      if (!razorpay) {
+        return res.status(500).json({
+          message: "Razorpay is not configured. Please set the RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.",
         });
       }
-      
+
       if (!amount || amount < 1) {
         return res.status(400).json({ message: "Please provide a valid donation amount" });
       }
-      
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(amount * 100), // Convert to cents
-        currency: "usd",
-        metadata: {
-          purpose: "donation",
-        },
-      });
-      
-      res.json({ clientSecret: paymentIntent.client_secret });
+
+      const options = {
+        amount: Math.round(amount * 100), // Convert to paise
+        currency: "INR", // Or your desired currency
+        receipt: "rcp1", // generate a unique receipt if needed
+      };
+
+      const order = await razorpay.orders.create(options);
+      res.json({ orderId: order.id }); // Send the orderId to the client
     } catch (error: any) {
-      console.error("Error creating payment intent:", error);
-      res.status(500).json({ 
-        message: "Error creating payment intent: " + error.message 
+      console.error("Error creating Razorpay order:", error);
+      res.status(500).json({
+        message: "Error creating Razorpay order: " + error.message,
       });
     }
   });
 
-  // Record a completed donation
-  app.post("/api/record-donation", async (req, res) => {
-    try {
-      const { 
-        amount, 
-        name, 
-        email, 
-        message, 
-        isRecurring, 
-        purpose, 
-        stripePaymentId 
-      } = req.body;
-      
-      if (!amount) {
-        return res.status(400).json({ message: "Donation amount is required" });
-      }
-      
-      // Create donation record in the database
-      const donation = await storage.createDonation({
-        amount,
-        name,
-        email,
-        message,
-        isRecurring: isRecurring || false,
-        purpose,
-        stripePaymentId
-      });
-      
-      res.json({ 
-        success: true, 
-        message: "Donation recorded successfully",
-        donation
-      });
-    } catch (error: any) {
-      console.error("Error recording donation:", error);
-      res.status(500).json({ 
-        message: "Error recording donation: " + error.message 
-      });
-    }
-  });
 
   // Get all donations (admin only route in a real app)
   app.get("/api/donations", async (req, res) => {

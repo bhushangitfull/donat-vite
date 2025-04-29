@@ -1,27 +1,23 @@
 import { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import DonationForm from '@/components/donation/DonationForm';
 import { Heart, DollarSign } from 'lucide-react';
 
-// Load Stripe outside of component to avoid recreating it on each render
-if (import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
-}
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+
+
+interface Window { Razorpay: any; }
 
 const DonatePage = () => {
   const [amount, setAmount] = useState(50);
-  const [clientSecret, setClientSecret] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
   const { toast } = useToast();
+
+
 
   useEffect(() => {
     // Set page title
@@ -43,35 +39,73 @@ const DonatePage = () => {
     setAmount(parseFloat(value));
   };
 
-  const handleProceedToDonate = async () => {
-    if (!amount || amount < 1) {
-      toast({
-        title: "Invalid amount",
-        description: "Please enter a valid donation amount of at least $1",
-        variant: "destructive",
-      });
+  const loadRazorpay = async () => {
+    return new Promise<void>((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.async = true;
+      document.body.appendChild(script);
+  
+      script.onload = () => {
+        resolve();
+      };
+    });
+  
+  };
+
+  const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
+
+  useEffect(() => {
+    loadRazorpay();
+  }, []);
+
+  const handlePayment = async (amount: number) => {
+    if (!isRazorpayLoaded) {
       return;
     }
+    if (!orderId) {
+        return;
+      }
 
-    try {
-      setLoading(true);
-      // Create a PaymentIntent with the donation amount
-      const response = await apiRequest('POST', '/api/create-payment-intent', { amount });
-      const data = await response.json();
-      
-      // Set the client secret from the payment intent
-      setClientSecret(data.clientSecret);
-    } catch (error) {
-      console.error('Error creating payment intent:', error);
-      toast({
-        title: "Payment error",
-        description: "There was an error setting up the payment. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+    const response = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: amount }),
+    });
+
+    const { orderId } = await response.json();
+
+    const options = {
+      key: process.env.VITE_RAZORPAY_KEY_ID, // Replace with your actual key
+      amount: Math.round(amount * 100), // Convert to paise
+      currency: "INR", // Or your desired currency
+      order_id: orderId,
+      handler: function (response: any) {
+        toast({ description: "Payment Success!" });
+      },
+      prefill: { name: "User name", email: "user@example.com", contact: "9999999999" },
+      notes: { address: "Razorpay Corporate Office" },
+      theme: { color: "#3399cc" },
+    };
+
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
   };
+
+  
+
+  useEffect(() => {
+    let isMounted = true;
+    loadRazorpay().then(() => {
+      if (isMounted) {
+        setIsRazorpayLoaded(true);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Impact statistics
   const impactStats = [
@@ -96,13 +130,7 @@ const DonatePage = () => {
           </p>
         </div>
 
-        {clientSecret ? (
-          // Show payment form once we have a client secret
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <DonationForm clientSecret={clientSecret} />
-          </Elements>
-        ) : (
-          // Show donation amount selection
+       
           <div className="max-w-3xl mx-auto">
             <Card>
               <CardHeader>
@@ -166,25 +194,16 @@ const DonatePage = () => {
                 </div>
 
                 <Button 
-                  className="w-full py-6 text-lg" 
-                  onClick={handleProceedToDonate}
-                  disabled={loading || !amount || amount < 1}
+                  className="w-full py-6 text-lg"
+                  onClick={() => handlePayment(amount)}
+                  disabled={!amount || amount < 1 || !isRazorpayLoaded}
                 >
-                  {loading ? (
-                    <span className="flex items-center">
-                      <span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                      Processing...
-                    </span>
-                  ) : (
-                    <span className="flex items-center">
-                      <DollarSign className="mr-2 h-5 w-5" /> Proceed to Donate
-                    </span>
-                  )}
+                  <DollarSign className="mr-2 h-5 w-5" /> Proceed to Donate
                 </Button>
               </CardContent>
             </Card>
           </div>
-        )}
+       
 
         {/* Impact Section */}
         <div className="mt-20">
@@ -291,13 +310,13 @@ const DonatePage = () => {
             </Card>
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-bold mb-2">Is my payment information secure?</h3>
+                <h3 className="text-lg font-bold mb-2">Is my payment information secure?</h3> 
                 <p className="text-gray-600">
-                  Absolutely. We use Stripe, a PCI-compliant payment processor, to handle all transactions securely. Your financial information is never stored on our servers.
+                  Absolutely. We use a PCI-compliant payment processor, to handle all transactions securely. Your financial information is never stored on our servers.
                 </p>
               </CardContent>
             </Card>
-          </div>
+          </div> 
         </div>
 
         {/* Contact */}
