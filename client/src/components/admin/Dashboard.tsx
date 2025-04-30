@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,22 +6,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import EventForm from './EventForm';
+import { useQuery } from "@tanstack/react-query";
 import NewsForm from './NewsForm';
 import MenuForm from './MenuForm';
-import { 
-  Calendar, 
-  Newspaper, 
-  Settings, 
-  Menu, 
-  LayoutDashboard, 
+import {
+  Calendar,
+  Newspaper,
+  Settings,
+  Menu,
+  LayoutDashboard,
   LogOut,
-  User
-} from 'lucide-react';
+  User,
+} from "lucide-react";
+import {
+  getEventsCount,
+  getNewsPostsCount,
+  getSubscribersCount,
+} from "@/lib/firebase";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const { user, logout } = useAuth();
   const { toast } = useToast();
+
+  const {
+    data: eventsCountData,
+  } = useQuery({ queryKey: ["eventsCount"], queryFn: getEventsCount });
   const [, setLocation] = useLocation();
 
   const handleLogout = async () => {
@@ -42,11 +52,37 @@ const Dashboard = () => {
     }
   };
 
+  const {
+    data: newsCountData,
+    isError: newsError,
+    isLoading: newsLoading,
+  } = useQuery({ queryKey: ["newsCount"], queryFn: getNewsPostsCount });
+
+  const {
+    data: subscribersCountData,
+    isError: subscribersError,
+    isLoading: subscribersLoading,
+  } = useQuery({ queryKey: ["subscribersCount"], queryFn: getSubscribersCount });
+
+
   const stats = [
-    { title: "Total Events", value: "12", icon: <Calendar className="h-6 w-6 text-blue-500" /> },
-    { title: "Published Articles", value: "24", icon: <Newspaper className="h-6 w-6 text-green-500" /> },
-    { title: "Total Donations", value: "$12,457", icon: <Settings className="h-6 w-6 text-pink-500" /> },
-    { title: "Subscribers", value: "2,341", icon: <User className="h-6 w-6 text-purple-500" /> },
+    {
+      title: "Total Events",
+      value: eventsCountData,
+      icon: <Calendar className="h-6 w-6 text-blue-500" />,
+    },
+    {
+      title: "Published Articles",
+      value: newsLoading
+        ? "..."
+        : newsError
+          ? "Error"
+          : newsCountData,
+      icon: <Newspaper className="h-6 w-6 text-green-500" />,
+    },
+    { title: "Subscribers", value: subscribersLoading ? "..." : subscribersError ? "Error" : subscribersCountData, icon: <User className="h-6 w-6 text-purple-500" /> },
+
+
   ];
 
   return (
@@ -55,7 +91,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold text-primary mr-10">
-              Hope Foundation
+              BBS Foundation
             </Link>
             <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
           </div>
@@ -77,46 +113,52 @@ const Dashboard = () => {
           <div className="flex flex-col flex-grow pt-5 overflow-y-auto">
             <div className="flex-grow flex flex-col">
               <nav className="flex-1 px-2 space-y-1">
-                <Button 
-                  variant={activeTab === 'overview' ? 'default' : 'ghost'} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab('overview')}
+                <Button
+                  variant={activeTab === "overview" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("overview")}
                 >
                   <LayoutDashboard className="h-5 w-5 mr-2" />
                   Overview
                 </Button>
-                <Button 
-                  variant={activeTab === 'events' ? 'default' : 'ghost'} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab('events')}
+                <Button
+                  variant={activeTab === "events" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("events")}
                 >
                   <Calendar className="h-5 w-5 mr-2" />
                   Events
                 </Button>
-                <Button 
-                  variant={activeTab === 'news' ? 'default' : 'ghost'} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab('news')}
+                <Button
+                  variant={activeTab === "news" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("news")}
                 >
                   <Newspaper className="h-5 w-5 mr-2" />
                   News
                 </Button>
-                <Button 
-                  variant={activeTab === 'menu' ? 'default' : 'ghost'} 
-                  className="w-full justify-start" 
-                  onClick={() => setActiveTab('menu')}
+                <Button
+                  variant={activeTab === "menu" ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => setActiveTab("menu")}
                 >
                   <Menu className="h-5 w-5 mr-2" />
                   Menu
                 </Button>
               </nav>
             </div>
+
           </div>
         </div>
 
         {/* Mobile tabs for smaller screens */}
         <div className="md:hidden w-full border-b bg-white">
-          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            defaultValue="overview"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid grid-cols-4 w-full">
               <TabsTrigger value="overview">
                 <LayoutDashboard className="h-5 w-5 md:mr-2" />
@@ -142,10 +184,13 @@ const Dashboard = () => {
         <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
           {activeTab === 'overview' && (
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
-              
+              <h2 className="text-2xl font-bold text-gray-900">
+                Dashboard Overview
+              </h2>
+
               {/* Stats cards */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+              >
                 {stats.map((stat, index) => (
                   <Card key={index}>
                     <CardContent className="p-6 flex items-center justify-between">
@@ -158,7 +203,7 @@ const Dashboard = () => {
                   </Card>
                 ))}
               </div>
-              
+
               {/* Quick actions */}
               <Card>
                 <CardHeader>
@@ -181,7 +226,7 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-              
+
               {/* View website */}
               <Card>
                 <CardContent className="p-6">

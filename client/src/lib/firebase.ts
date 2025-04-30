@@ -4,13 +4,8 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut, 
-  onAuthStateChanged, 
   User,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  updateProfile,
-  EmailAuthProvider
+  signInWithEmailAndPassword
 } from "firebase/auth";
 import { getFirestore, collection, doc, getDoc, setDoc, addDoc, deleteDoc, updateDoc, query, where, getDocs, Timestamp, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -44,33 +39,6 @@ export const loginWithGoogle = async () => {
   }
 };
 
-// Email/Password Authentication
-
-// Register a new user with email and password
-export const registerWithEmail = async (email: string, password: string, displayName: string): Promise<User> => {
-  try {
-    // Create the user account
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-    // Update the user's profile with display name
-    await updateProfile(userCredential.user, {
-      displayName: displayName
-    });
-    
-    // Create a user profile document in Firestore
-    const userRef = doc(firestore, "users", userCredential.user.uid);
-    await setDoc(userRef, {
-      email: email,
-      displayName: displayName,
-      createdAt: serverTimestamp(),
-    });
-    
-    return userCredential.user;
-  } catch (error) {
-    console.error("Error registering with email and password", error);
-    throw error;
-  }
-};
 
 // Sign in with email and password
 export const loginWithEmail = async (email: string, password: string): Promise<User> => {
@@ -83,15 +51,6 @@ export const loginWithEmail = async (email: string, password: string): Promise<U
   }
 };
 
-// Send password reset email
-export const resetPassword = async (email: string): Promise<void> => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-  } catch (error) {
-    console.error("Error sending password reset email", error);
-    throw error;
-  }
-};
 
 // Sign out user
 export const logoutUser = async () => {
@@ -103,91 +62,6 @@ export const logoutUser = async () => {
   }
 };
 
-// Check if user is admin
-export const checkAdminStatus = async (uid: string): Promise<boolean> => {
-  try {
-    // First check the admins collection (document per admin)
-    const adminRef = doc(firestore, "admins", uid);
-    const adminDoc = await getDoc(adminRef);
-    
-    if (adminDoc.exists()) {
-      return true;
-    }
-    
-    // If not found in admins collection, check the users collection for isAdmin field
-    const userRef = doc(firestore, "users", uid);
-    const userDoc = await getDoc(userRef);
-    
-    if (userDoc.exists() && userDoc.data().isAdmin === true) {
-      return true;
-    }
-    
-    // Special case: if this is the first user ever created in the system, make them admin
-    const usersRef = collection(firestore, "users");
-    const usersQuery = query(usersRef);
-    const usersSnapshot = await getDocs(usersQuery);
-    
-    if (usersSnapshot.size === 1 && usersSnapshot.docs[0].id === uid) {
-      // This is the first and only user, let's make them admin
-      await setDoc(adminRef, { 
-        uid, 
-        createdAt: serverTimestamp(),
-        email: userDoc.exists() ? userDoc.data().email : null
-      });
-      
-      // Also update the user document if it exists
-      if (userDoc.exists()) {
-        await updateDoc(userRef, { isAdmin: true });
-      }
-      
-      return true;
-    }
-    
-    return false;
-  } catch (error) {
-    console.error("Error checking admin status", error);
-    return false;
-  }
-};
-
-// Set admin status for a user (use this function to grant admin access)
-export const setAdminStatus = async (uid: string, isAdmin: boolean): Promise<void> => {
-  try {
-    const adminRef = doc(firestore, "admins", uid);
-    
-    if (isAdmin) {
-      // Get user information to store in admin document
-      const userRef = doc(firestore, "users", uid);
-      const userDoc = await getDoc(userRef);
-      
-      // Create admin document
-      await setDoc(adminRef, {
-        uid,
-        createdAt: serverTimestamp(),
-        email: userDoc.exists() ? userDoc.data().email : null
-      });
-      
-      // Update user document if it exists
-      if (userDoc.exists()) {
-        await updateDoc(userRef, { isAdmin: true });
-      }
-    } else {
-      // Remove admin document
-      await deleteDoc(adminRef);
-      
-      // Update user document if it exists
-      const userRef = doc(firestore, "users", uid);
-      const userDoc = await getDoc(userRef);
-      
-      if (userDoc.exists()) {
-        await updateDoc(userRef, { isAdmin: false });
-      }
-    }
-  } catch (error) {
-    console.error("Error setting admin status", error);
-    throw error;
-  }
-};
 
 // Firestore CRUD operations for events
 export const getEvents = async () => {
@@ -388,3 +262,38 @@ export const addSubscriber = async (email: string) => {
 };
 
 export { auth, firestore, storage };
+
+export const getEventsCount = async (): Promise<number> => {
+  try {
+    const eventsRef = collection(firestore, "events");
+    const querySnapshot = await getDocs(eventsRef);
+    return querySnapshot.size;
+  } catch (error) {
+    console.error("Error getting events count", error);
+    return 0;
+  }
+};
+// Get count of documents in "news" collection
+export const getNewsPostsCount = async (): Promise<number> => {
+  try {
+    const newsRef = collection(firestore, "news");
+    const querySnapshot = await getDocs(newsRef);
+    return querySnapshot.size;
+  } catch (error) {
+    console.error("Error getting news posts count", error);
+    return 0;
+  }
+};
+// Get count of documents in "subscribers" collection
+export const getSubscribersCount = async (): Promise<number> => {
+  try {
+    const subscribersRef = collection(firestore, "subscribers");
+    const querySnapshot = await getDocs(subscribersRef);
+    return querySnapshot.size;
+  } catch (error) {
+    console.error("Error getting subscribers count", error);
+    return 0;
+  }
+};
+
+

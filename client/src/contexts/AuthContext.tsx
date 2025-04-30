@@ -8,9 +8,6 @@ import {
   auth, 
   loginWithGoogle, 
   loginWithEmail, 
-  registerWithEmail, 
-  resetPassword, 
-  checkAdminStatus 
 } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,8 +17,6 @@ interface AuthContextType {
   loading: boolean;
   loginWithGoogle: () => Promise<User>;
   loginWithEmail: (email: string, password: string) => Promise<User>;
-  registerWithEmail: (email: string, password: string, displayName: string) => Promise<User>;
-  resetPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -33,12 +28,6 @@ const AuthContext = createContext<AuthContextType>({
     throw new Error("AuthContext not initialized");
   },
   loginWithEmail: async () => {
-    throw new Error("AuthContext not initialized");
-  },
-  registerWithEmail: async () => {
-    throw new Error("AuthContext not initialized");
-  },
-  resetPassword: async () => {
     throw new Error("AuthContext not initialized");
   },
   logout: async () => {
@@ -61,19 +50,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      
-      // Check admin status if user is logged in
-      if (currentUser) {
-        try {
-          const adminStatus = await checkAdminStatus(currentUser.uid);
-          setIsAdmin(adminStatus);
-        } catch (error) {
-          console.error("Error checking admin status:", error);
-          setIsAdmin(false);
-        }
-      } else {
-        setIsAdmin(false);
-      }
+      setIsAdmin(false);
       
       setLoading(false);
     });
@@ -128,64 +105,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const handleRegisterWithEmail = async (email: string, password: string, displayName: string) => {
-    try {
-      const user = await registerWithEmail(email, password, displayName);
-      toast({
-        title: "Account created",
-        description: "Your account has been successfully created.",
-      });
-      return user;
-    } catch (error: any) {
-      console.error("Registration error:", error);
-      let errorMessage = "Failed to create account. Please try again.";
-      
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "An account with this email already exists.";
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "Password is too weak. Please use a stronger password.";
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = "Invalid email address.";
-      }
-      
-      toast({
-        title: "Registration Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-
-  const handleResetPassword = async (email: string) => {
-    try {
-      await resetPassword(email);
-      toast({
-        title: "Password reset email sent",
-        description: "Check your email for instructions to reset your password.",
-      });
-    } catch (error: any) {
-      console.error("Password reset error:", error);
-      let errorMessage = "Failed to send password reset email. Please try again.";
-      
-      if (error.code === 'auth/user-not-found') {
-        // For security reasons, we don't want to reveal that the user doesn't exist
-        // So we still show a success message
-        toast({
-          title: "Password reset email sent",
-          description: "If an account exists with this email, you will receive instructions to reset your password.",
-        });
-        return; // Return early to prevent the error toast
-      }
-      
-      toast({
-        title: "Password Reset Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
 
   const value = {
     user,
@@ -193,8 +112,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     loginWithGoogle,
     loginWithEmail: handleLoginWithEmail,
-    registerWithEmail: handleRegisterWithEmail,
-    resetPassword: handleResetPassword,
     logout,
   };
 

@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { FcGoogle } from "react-icons/fc";
 import { Shield, Mail, AlertCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -31,37 +30,11 @@ const AdminLogin = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
-  // State for registration form
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
-
-  // State for password reset
-  const [resetEmail, setResetEmail] = useState("");
-  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
-  const { loginWithGoogle, loginWithEmail, registerWithEmail, resetPassword } =
+  const {loginWithEmail,} =
     useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-
-  // Function to handle Google login
-  const handleGoogleLogin = async () => {
-    try {
-      setIsLoading(true);
-      await loginWithGoogle();
-
-      // Redirect to admin dashboard after successful login
-      setLocation("/admin");
-    } catch (error) {
-      console.error("Login error:", error);
-      // Error handling is done in the AuthContext
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Function to handle email login
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -95,32 +68,6 @@ const AdminLogin = () => {
     }
   };
 
-  // Function to handle password reset
-  const handlePasswordReset = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!resetEmail) {
-      toast({
-        title: "Missing information",
-        description: "Please enter your email address",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      await resetPassword(resetEmail);
-
-      // Clear form and close dialog
-      setResetEmail("");
-      setIsResetDialogOpen(false);
-    } catch (error) {
-      // Error handling is done in the AuthContext
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -136,7 +83,6 @@ const AdminLogin = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
-            {/* Login Tab */}
             <TabsContent value="login">
               <form onSubmit={handleEmailLogin} className="space-y-4">
                 <div className="space-y-2">
@@ -151,16 +97,6 @@ const AdminLogin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="loginPassword">Password</Label>
-                    <button
-                      type="button"
-                      className="text-sm text-primary hover:text-blue-700"
-                      onClick={() => setIsResetDialogOpen(true)}
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
                   <Input
                     id="loginPassword"
                     type="password"
@@ -202,47 +138,6 @@ const AdminLogin = () => {
           </Tabs>
         </CardContent>
       </Card>
-
-      {/* Password Reset Dialog */}
-      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Reset Password</DialogTitle>
-            <DialogDescription>
-              Enter your email address and we'll send you a link to reset your
-              password.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handlePasswordReset}>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="resetEmail">Email</Label>
-                <Input
-                  id="resetEmail"
-                  placeholder="name@example.com"
-                  type="email"
-                  value={resetEmail}
-                  onChange={(e) => setResetEmail(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsResetDialogOpen(false)}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Sending..." : "Send Reset Link"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
