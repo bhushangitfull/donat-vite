@@ -57,7 +57,7 @@ const DonatePage = () => {
   };
 
   useEffect(() => {
-    document.title = 'Donate | Hope Foundation';
+    document.title = 'Donate | BBS Foundation';
     window.scrollTo(0, 0);
 
     const loadRazorpay = () => {
