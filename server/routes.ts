@@ -2,7 +2,9 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import Razorpay from 'razorpay';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 
 
@@ -10,34 +12,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes for the nonprofit app
 
   const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID, // Corrected variable name
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+    key_id: process.env.VITE_RAZORPAY_KEY_ID, // Corrected variable name
+    key_secret: process.env.VITE_RAZORPAY_SECRET_ID,
   });
 
 
   //Create Razorpay order
   app.post("/api/create-order", async (req, res) => {
     try {
+      console.log("Received request body:", req.body);
       const { amount } = req.body;
-
+  
       if (!razorpay) {
         return res.status(500).json({
-          message: "Razorpay is not configured. Please set the RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.",
+          message: "Razorpay is not configured.",
         });
       }
-
+  
       if (!amount || amount < 1) {
-        return res.status(400).json({ message: "Please provide a valid donation amount" });
+        return res.status(400).json({ message: "Invalid donation amount" });
       }
-
+  
       const options = {
-        amount: Math.round(amount * 100), // Convert to paise
-        currency: "INR", // Or your desired currency
-        receipt: "rcp1", // generate a unique receipt if needed
+        amount: Math.round(amount * 100),
+        currency: "INR",
+        receipt: "rcp1",
       };
-
+  
       const order = await razorpay.orders.create(options);
-      res.json({ orderId: order.id }); // Send the orderId to the client
+      res.status(200).json({ orderId: order.id });
     } catch (error: any) {
       console.error("Error creating Razorpay order:", error);
       res.status(500).json({
@@ -45,7 +48,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-
 
   // Get all donations (admin only route in a real app)
   app.get("/api/donations", async (req, res) => {
