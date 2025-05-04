@@ -17,7 +17,6 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Heart, DollarSign } from 'lucide-react';
-
 declare global {
   interface Window {
     Razorpay: any;
@@ -29,31 +28,39 @@ const DonatePage = () => {
   const [isRazorpayLoaded, setIsRazorpayLoaded] = useState(false);
   const { toast } = useToast();
 
-  const initiatePayment = (amount: number, orderId: string) => {
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: Math.round(amount * 100),
-      currency: 'INR',
-      order_id: orderId,
-      handler: function (response: any) {
-        console.log('Payment successful:', response);
-        toast({ description: 'Payment Successful!' });
-      },
-      prefill: {
-        name: 'User Name',
-        email: 'user@example.com',
-        contact: '9999999999',
-      },
-      notes: {
-        address: 'Hope Foundation Office',
-      },
-      theme: {
-        color: '#3399cc',
-      },
-    };
+  const initiatePayment = async (amount: number, orderId: string) => {
+    try {
+      const res = await fetch("/api/razorpay-key");
+      const data = await res.json();
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      const options = {
+        key: data.key, // Use the key fetched from the backend
+        amount: Math.round(amount * 100),
+        currency: "INR",
+        order_id: orderId,
+        handler: function (response: any) {
+          console.log("Payment successful:", response);
+          toast({ description: "Payment Successful!" });
+        },
+        prefill: {
+          name: "User Name",
+          email: "user@example.com",
+          contact: "9999999999",
+        },
+        notes: {
+          address: "Hope Foundation Office",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Error fetching Razorpay key:", error);
+      toast({ description: "Failed to initiate payment. Please try again." });
+    }
   };
 
   useEffect(() => {
@@ -108,7 +115,7 @@ const DonatePage = () => {
         throw new Error("Order ID missing in backend response");
       }
 
-      initiatePayment(amount, orderId); // Fixed: no arguments in original call
+      initiatePayment(amount, orderId);
     } catch (error) {
       console.error("Error initiating payment:", error);
       toast({ description: 'Payment failed to initiate' });
@@ -166,7 +173,7 @@ const DonatePage = () => {
                     }`}
                     onClick={() => handleAmountSelect(donationAmount)}
                   >
-                    ${donationAmount}
+                    ₹{donationAmount}
                   </Button>
                 ))}
               </div>
@@ -175,7 +182,7 @@ const DonatePage = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Custom Amount</label>
                 <div className="relative mt-1 rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-gray-500 sm:text-sm">$</span>
+                    <span className="text-gray-500 sm:text-sm">₹</span>
                   </div>
                   <Input
                     type="text"
@@ -205,7 +212,7 @@ const DonatePage = () => {
             {impactStats.map((stat, index) => (
               <Card key={index}>
                 <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-primary mb-2">{stat.amount}</h3>
+                  <h3 className="text-2xl font-bold text-primary mb-2">₹{stat.amount.slice(1)}</h3>
                   <p className="text-gray-700">{stat.impact}</p>
                 </CardContent>
               </Card>
