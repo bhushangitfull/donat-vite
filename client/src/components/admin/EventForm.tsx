@@ -214,7 +214,7 @@ const EventForm = () => {
           <CardTitle>Event Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title">Event Title*</Label>
               <Input
@@ -238,7 +238,7 @@ const EventForm = () => {
               />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="date">Event Date*</Label>
                 <Input
@@ -264,7 +264,7 @@ const EventForm = () => {
             
             <div className="space-y-2">
               <Label htmlFor="image">Event Image</Label>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 <Input
                   id="image"
                   type="file"
@@ -276,12 +276,12 @@ const EventForm = () => {
               </div>
               
               {imagePreview && (
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500 mb-2">Image Preview:</p>
-                  <div className="relative w-full h-48 overflow-hidden rounded-md">
+                <div className="mt-3 md:mt-4">
+                  <p className="text-sm text-gray-500 mb-1 md:mb-2">Image Preview:</p>
+                  <div className="relative w-full h-32 md:h-48 overflow-hidden rounded-md">
                     <img
                       src={imagePreview}
-                      alt="Event Preview"
+                      alt="Event Preview" 
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -289,9 +289,9 @@ const EventForm = () => {
               )}
             </div>
             
-            <div className="pt-4">
+            <div className="pt-3 md:pt-4">
               <Button 
-                type="submit" 
+                type="submit"
                 className="w-full md:w-auto"
                 disabled={submitting}
               >
@@ -318,7 +318,7 @@ const EventForm = () => {
           <p>No events found. Create your first event above.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {events.map((event) => (
             <Card key={event.id} className="overflow-hidden">
               {event.imageUrl && (

@@ -64,7 +64,6 @@ const Dashboard = () => {
     isLoading: subscribersLoading,
   } = useQuery({ queryKey: ["subscribersCount"], queryFn: getSubscribersCount });
 
-
   const stats = [
     {
       title: "Total Events",
@@ -81,20 +80,12 @@ const Dashboard = () => {
       icon: <Newspaper className="h-6 w-6 text-green-500" />,
     },
     { title: "Subscribers", value: subscribersLoading ? "..." : subscribersError ? "Error" : subscribersCountData, icon: <User className="h-6 w-6 text-purple-500" /> },
-
-
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-primary mr-10">
-              BBS Foundation
-            </Link>
-            <h1 className="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
-          </div>
           <div className="flex items-center space-x-4">
             <div className="text-sm text-gray-700">
               {user?.email}
@@ -146,13 +137,15 @@ const Dashboard = () => {
                   Menu
                 </Button>
               </nav>
+              <div className="text-sm text-gray-700">
+              {user?.email}
             </div>
-
+            </div>
           </div>
         </div>
 
         {/* Mobile tabs for smaller screens */}
-        <div className="md:hidden w-full border-b bg-white">
+        <div className="md:hidden w-full border-b bg-white px-4">
           <Tabs
             defaultValue="overview"
             value={activeTab}
@@ -160,37 +153,36 @@ const Dashboard = () => {
             className="w-full"
           >
             <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="overview">
-                <LayoutDashboard className="h-5 w-5 md:mr-2" />
-                <span className="hidden sm:inline-block">Overview</span>
+              <TabsTrigger value="overview" className="flex flex-col items-center space-x-0">
+                <LayoutDashboard className="h-5 w-5" />
+                <span className="text-xs">Overview</span>
               </TabsTrigger>
-              <TabsTrigger value="events">
-                <Calendar className="h-5 w-5 md:mr-2" />
-                <span className="hidden sm:inline-block">Events</span>
+              <TabsTrigger value="events" className="flex flex-col items-center space-x-0">
+                <Calendar className="h-5 w-5" />
+                <span className="text-xs">Events</span>
               </TabsTrigger>
-              <TabsTrigger value="news">
-                <Newspaper className="h-5 w-5 md:mr-2" />
-                <span className="hidden sm:inline-block">News</span>
+              <TabsTrigger value="news" className="flex flex-col items-center space-x-0">
+                <Newspaper className="h-5 w-5" />
+                <span className="text-xs">News</span>
               </TabsTrigger>
-              <TabsTrigger value="menu">
-                <Menu className="h-5 w-5 md:mr-2" />
-                <span className="hidden sm:inline-block">Menu</span>
+              <TabsTrigger value="menu" className="flex flex-col items-center space-x-0">
+                <Menu className="h-5 w-5" />
+                <span className="text-xs">Menu</span>
               </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
 
         {/* Main content */}
-        <div className="flex-1 overflow-y-auto p-6 bg-gray-100">
-          {activeTab === 'overview' && (
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-100">
+        {activeTab === 'overview' && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-900">
                 Dashboard Overview
               </h2>
 
               {/* Stats cards */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-              >
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat, index) => (
                   <Card key={index}>
                     <CardContent className="p-6 flex items-center justify-between">
@@ -226,7 +218,7 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-
+              <div className="md:hidden" >
               {/* View website */}
               <Card>
                 <CardContent className="p-6">
@@ -237,15 +229,15 @@ const Dashboard = () => {
                         See how your changes look on the live site
                       </p>
                     </div>
-                    <Link href="/">
+                    <Link href="/" className="inline-block">
                       <Button variant="outline">Visit Website</Button>
                     </Link>
                   </div>
                 </CardContent>
               </Card>
+              </div>
             </div>
           )}
-
           {activeTab === 'events' && <EventForm />}
           {activeTab === 'news' && <NewsForm />}
           {activeTab === 'menu' && <MenuForm />}
